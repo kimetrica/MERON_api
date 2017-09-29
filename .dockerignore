@@ -1,0 +1,7 @@
+/.virtualenv/
+/staticfiles/
+/media/
+# we don't want the build cache to be invalidated just because we change something in a compose config
+/docker-compose.yml
+/docker-compose.override.yml
+/env.example

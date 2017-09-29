@@ -1,0 +1,9 @@
+django==1.11.5
+djangorestframework==3.6.4
+
+django-environ==0.4.4
+whitenoise==3.3.0
+Pillow==4.2.1
+
+# malnutrition_detection library, fake version until it is ready to use
+git+https://github.com/kimetrica/malnutrition_detection/@fake#egg=malnutrition_detection

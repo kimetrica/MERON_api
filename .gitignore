@@ -1,0 +1,4 @@
+__pycache__/
+/.virtualenv/
+/staticfiles/
+/media/
