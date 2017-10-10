@@ -12,6 +12,7 @@ class FaceDetectionResultView(APIView):
 
     def post(self, request):
         """Accept POST request with image either as multipart/form-data or base64 encoded file in JSON."""
+        # passing the request to the context so we can access the query_params
         input_serializer = FaceDetectionInputSerializer(data=request.data, context={'request': request})
         if input_serializer.is_valid():
             result = input_serializer.save()

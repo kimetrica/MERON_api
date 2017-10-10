@@ -9,20 +9,22 @@ To POST an image to the API, you have two options:
 -   You can do a regular `multipart/form-data` request that transmits the image like a HTML file upload.
 -   You can do an `application/json` request, and include the image as a base64 encoded string. The API will accept both. base64-encoding the file will add approximately 30% to the file-size, so if data volume or connection speed are of concern a `multipart/form-data` request might be preferable.
 
+The endpoint accepts two optional boolean arguments, `score` and `classification`. If instructed via those arguments, the function will calculate and include those parameters in the result. Those parameters can either be passed in the request body or provided via GET parameters in the URL.
+
 
 ## Example POST requests to the MERON api
 
 The following examples demonstrate how to make an API request to the MERON API (assumed to be running locally). Replace `http://meron.localdomain` with `http://localhost:8000` when running in development mode.
 
 
-### curl command for posting an image as multipart/form-data
+### curl command for posting an image as multipart/form-data with score and classification calculation (score set via body and classification via GET parameter for the sake of demonstration)
 
-`curl -v  -F "image=@example_image.jpeg" http://meron.localdomain`
+`curl -v  -F "score=true" -F "image=@example_image.jpeg" http://meron.localdomain?classification`
 
 
 ### curl command for posting a base64 encoded image in a JSON object
 
-`(echo -n '{"image": "'; base64 example_image.jpeg; echo '"}') | curl -v -H 'content-type: application/json' -d @- http://meron.localdomain
+`(echo -n '{"image": "'; base64 example_image.jpeg; echo '", "score": true}') | curl -v -H 'content-type: application/json' -d @- http://meron.localdomain?classification
 `
 
 
@@ -31,7 +33,7 @@ The following examples demonstrate how to make an API request to the MERON API (
 ```python
 import requests
 
-res = requests.post('http://meron.localdomain', files={'image': open('example_image.jpeg', 'rb')})
+res = requests.post('http://meron.localdomain?classification', files={'image': open('example_image.jpeg', 'rb')}, data={'score': True})
 ```
 
 
@@ -46,7 +48,7 @@ with open('example_image.jpeg', 'rb') as image_file:
     encoded_string = b64encode(image_file.read())
 
 # we need to decode the byte-string returned by b64encode so it's JSON serializable
-res = requests.post('http://meron.localdomain', json={'image': encoded_string.decode()})
+res = requests.post('http://meron.localdomain?classification', json={'image': encoded_string.decode(), 'score': True})
 ```
 
 

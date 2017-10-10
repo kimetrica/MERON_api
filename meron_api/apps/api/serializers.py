@@ -14,6 +14,8 @@ class FaceDetectionInputSerializer(serializers.Serializer):
     """Serializer that uses Base64ImageField to allow POSTing of image as multipart/form-data or base64 in JSON."""
 
     image = Base64ImageField()
+    score = serializers.BooleanField(required=False)
+    classification = serializers.BooleanField(required=False)
 
     def create(self, validated_data):
         """Call face detection function and return results."""
@@ -26,8 +28,9 @@ class FaceDetectionInputSerializer(serializers.Serializer):
             with open(file_path, 'wb') as tmp_file:
                 tmp_file.write(django_content_file.read())
             result = analyze_image(file_path,
-                                   'score' in self.context['request'].query_params,
-                                   'classification' in self.context['request'].query_params)
+                                   'score' in self.context['request'].query_params or validated_data.get('score'),
+                                   'classification' in self.context['request'].query_params or
+                                   validated_data.get('classification'))
         return result
 
 

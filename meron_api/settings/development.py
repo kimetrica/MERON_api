@@ -8,6 +8,8 @@ Local settings
 - Add Django Debug Toolbar
 - Add django-extensions as app
 """
+import os
+import socket
 
 from .base import *  # noqa
 
@@ -26,9 +28,9 @@ ALLOWED_HOSTS = env.list('DJANGO_ALLOWED_HOSTS', default=['meron.localdomain', '
 # Note: This key only used for development and testing.
 SECRET_KEY = env('DJANGO_SECRET_KEY', default='Q7[,UcQNe`&=k#73^oA(P_gV.fEk{Ioq)|8^*~y<G|8[3_^d4b')
 
+
 # Mail settings
 # ------------------------------------------------------------------------------
-
 EMAIL_PORT = 1025
 
 EMAIL_HOST = 'localhost'
@@ -36,30 +38,17 @@ EMAIL_BACKEND = env('DJANGO_EMAIL_BACKEND',
                     default='django.core.mail.backends.console.EmailBackend')
 
 
-# CACHING
-# ------------------------------------------------------------------------------
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-        'LOCATION': ''
-    }
-}
-
 # django-debug-toolbar
 # ------------------------------------------------------------------------------
-MIDDLEWARE = ['debug_toolbar.middleware.DebugToolbarMiddleware', ] + MIDDLEWARE
-INSTALLED_APPS += ['debug_toolbar', ]
+INTERNAL_IPS = ['127.0.0.1']
 
-# this might need to be updated according to the IP range Docker uses on your system
-INTERNAL_IPS = ['127.0.0.1', '172.19.0.1', ]
-
-
-import socket
-import os
 # tricks to have debug toolbar when developing with docker
 if os.environ.get('USE_DOCKER') == 'yes':
     ip = socket.gethostbyname(socket.gethostname())
     INTERNAL_IPS += [ip[:-1] + '1']
+
+MIDDLEWARE = ['debug_toolbar.middleware.DebugToolbarMiddleware', ] + MIDDLEWARE
+INSTALLED_APPS += ['debug_toolbar', ]
 
 DEBUG_TOOLBAR_CONFIG = {
     'DISABLE_PANELS': [
@@ -68,13 +57,10 @@ DEBUG_TOOLBAR_CONFIG = {
     'SHOW_TEMPLATE_CONTEXT': True,
 }
 
+
 # django-extensions
 # ------------------------------------------------------------------------------
 INSTALLED_APPS += ['django_extensions', ]
-
-# TESTING
-# ------------------------------------------------------------------------------
-TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 
 
 LOGGING = {

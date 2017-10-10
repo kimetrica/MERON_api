@@ -1,8 +1,7 @@
 """Module that contains Base64ImageField and possibly other custom serializer fields."""
 import logging
 import uuid
-from base64 import b64decode
-from binascii import Error as B64DecodeError
+import base64
 from io import BytesIO
 
 from django.core.files.base import ContentFile
@@ -46,11 +45,11 @@ class Base64ImageField(serializers.ImageField):
         if isinstance(data, str):
             # Try to b64decode the file. Return validation error if it fails.
             try:
-                decoded_string = b64decode(data)
+                decoded_string = base64.b64decode(data)
                 decoded_file = BytesIO(decoded_string)
                 img = Image.open(decoded_file)
                 img.verify()
-            except (OSError, B64DecodeError):
+            except (OSError, base64.binascii.Error):
                 logger.exception('No valid image file could be decoded')
                 self.fail('invalid_image')
 

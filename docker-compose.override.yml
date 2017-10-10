@@ -17,6 +17,8 @@ services:
     environment:
       - DJANGO_SETTINGS_MODULE=meron_api.settings.development
       - DJANGO_ALLOWED_HOSTS=meron.localdomain,localhost,127.0.0.1
+      # this instructs settings to add the Docker IP to INTERNAL_IPS, for django-debug-toolbar
+      - USE_DOCKER=yes
     ports:
       - "8000:8000"
     entrypoint: /run_development_server.sh
