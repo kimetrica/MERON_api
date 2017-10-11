@@ -1,5 +1,4 @@
-"""
-Local settings
+"""Local settings.
 
 - Run in Debug mode
 
@@ -12,6 +11,7 @@ import os
 import socket
 
 from .base import *  # noqa
+from .base import env, TEMPLATES, MIDDLEWARE, INSTALLED_APPS
 
 # DEBUG
 # ------------------------------------------------------------------------------

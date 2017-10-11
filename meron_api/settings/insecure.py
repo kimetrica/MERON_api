@@ -1,4 +1,6 @@
+"""Settings that will be used when running locally without SSL. Should be close to production."""
 from .base import *  # noqa
+from .base import env, MIDDLEWARE
 
 
 SECRET_KEY = env('DJANGO_SECRET_KEY')

@@ -1,0 +1,5 @@
+# this file instructs docker-compose to use the image built in the current CI pipeline so it can be tested
+version: '2'
+services:
+  django_api:
+    image: ${CI_REGISTRY_IMAGE}:ci-django_api-${CI_PIPELINE_ID}

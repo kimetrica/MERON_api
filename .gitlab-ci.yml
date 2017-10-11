@@ -1,0 +1,85 @@
+before_script:
+  # removing stale networks in case they have not been cleaned up due to tasks that failed before cleanup step
+  - docker network rm $(docker network ls | grep cimrn | awk {'print $1'}) || echo "no stale networks"
+
+stages:
+  - build
+  - lint
+  - test
+  - cleanup
+
+variables:
+  APP: "mrn"
+  ENV: "prd"
+  SECRET_KEY: "eequ8AhYakLV9fmNKbgrQi3kieShoFai0TaCjgzD"
+  DOMAIN: "meron.localdomain"
+
+  # Use a unique name for the network and and containers so that we can run multiple builds simultaneously
+  COMPOSE_PROJECT_NAME: ci_${APP}_${CI_PIPELINE_ID}
+
+  # Tag the images and push them to the Registry
+  BUILD_IMAGES: "django_api nginx"
+
+# linting should happen in container, because CI is running under the shell executor and you would need to install
+# libjpeg-dev etc. to build pillow on the shell executor. So better to just check the files inside the container.
+# This means we have to run build step first though.
+lint:
+  variables:
+    SERVICE: "django_api"
+  script:
+    # docker-compose.ci.yml instructs docker-compose to use the image just built in this pipeline
+    # it then uses the entrypoint script to install requirements/lint.txt and then executes `flake8 meron_api/`
+    - docker-compose -f docker-compose.yml -f docker-compose.ci.yml run  --entrypoint="/install_dependencies_and_run_command.sh" --rm $SERVICE lint flake8 meron_api/
+  after_script:
+    - docker-compose -f docker-compose.yml -f docker-compose.ci.yml down
+  stage: lint
+
+build_django_api:
+  variables:
+    SERVICE: "django_api"
+  script:
+    - docker-compose -f docker-compose.yml build --pull --force-rm $SERVICE
+  after_script:
+    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
+    - docker tag ci${APP}${CI_PIPELINE_ID}_${SERVICE}:latest ${CI_REGISTRY_IMAGE}:ci-${SERVICE}-${CI_PIPELINE_ID}
+    - docker push ${CI_REGISTRY_IMAGE}:ci-${SERVICE}-${CI_PIPELINE_ID}
+    - if [ "${CI_BUILD_TAG}" != "" ]; then docker tag ci${APP}${CI_PIPELINE_ID}_${SERVICE}:latest ${CI_REGISTRY_IMAGE}:${SERVICE}-${CI_BUILD_TAG}; fi
+    - if [ "${CI_BUILD_TAG}" != "" ]; then docker push ${CI_REGISTRY_IMAGE}:${SERVICE}-${CI_BUILD_TAG}; fi
+  stage: build
+  tags:
+    - docker_images
+
+build_nginx:
+  variables:
+    SERVICE: "nginx"
+  script:
+    - docker-compose -f docker-compose.yml build --pull --force-rm $SERVICE
+  after_script:
+    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
+    - docker tag ci${APP}${CI_PIPELINE_ID}_${SERVICE}:latest ${CI_REGISTRY_IMAGE}:ci-${SERVICE}-${CI_PIPELINE_ID}
+    - docker push ${CI_REGISTRY_IMAGE}:ci-${SERVICE}-${CI_PIPELINE_ID}
+    - if [ "${CI_BUILD_TAG}" != "" ]; then docker tag ci${APP}${CI_PIPELINE_ID}_${SERVICE}:latest ${CI_REGISTRY_IMAGE}:${SERVICE}-${CI_BUILD_TAG}; fi
+    - if [ "${CI_BUILD_TAG}" != "" ]; then docker push ${CI_REGISTRY_IMAGE}:${SERVICE}-${CI_BUILD_TAG}; fi
+  stage: build
+  tags:
+    - docker_images
+
+test_django_api:
+  variables:
+    SERVICE: "django_api"
+    DJANGO_SETTINGS_MODULE: "meron_api.settings.test"
+  script:
+    # docker-compose.ci.yml instructs docker-compose to use the image just built in this pipeline
+    # it then uses the entrypoint script to install requirements/test.txt and then executes `python manage.py test`
+    - docker-compose -f docker-compose.yml -f docker-compose.ci.yml run --entrypoint="/install_dependencies_and_run_command.sh" --rm $SERVICE test python manage.py test
+  after_script:
+    - docker-compose -f docker-compose.yml -f docker-compose.ci.yml down
+  stage: test
+
+cleanup:
+  before_script:
+    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
+  script:
+    - for SERVICE in ${BUILD_IMAGES}; do docker rmi ${CI_REGISTRY_IMAGE}:ci-${SERVICE}-${CI_PIPELINE_ID}; done
+  stage: cleanup
+  when: always

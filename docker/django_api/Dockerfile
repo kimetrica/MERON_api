@@ -4,16 +4,18 @@ RUN groupadd -r django \
     && useradd -r -g django django
 
 COPY . /app/
-COPY docker/django_api/run_development_server.sh /run_development_server.sh
+
+# this script can be used to install development/test requirements in a new virtualenv and run devserver/tests
+# It is not used in production
+COPY docker/django_api/install_dependencies_and_run_command.sh /install_dependencies_and_run_command.sh
+RUN chmod -v 755 /install_dependencies_and_run_command.sh
 
 RUN pip install --no-cache-dir -r /app/meron_api/requirements/production.txt
 
-RUN chmod -v 755 /run_development_server.sh
-
-# creating and making user writable only paths that are necessary. `.virtualenv` is only necessary for development,
+# creating and making user writable only necessary paths. `.virtualenv` is only necessary for development,
 # but as it's not activated otherwise it doesn't hurt. `media` and `staticfiles` are created outside the `meron_api`
 # app source code folder, as that path will be mounted from the host system in development and we would have to take
-# care of permissions if we used subfolders of `meron_api`
+# care of permissions (and clutter the host system's source code folder) if we used subfolders of `meron_api`
 RUN mkdir /app/.virtualenv
 RUN mkdir /app/media
 RUN mkdir /app/staticfiles

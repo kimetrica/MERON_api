@@ -1,11 +1,10 @@
-"""
-Test settings
+"""Test settings.
 
 - Used to run tests fast on the continuous integration server and locally
 """
 
 from .base import *  # noqa
-
+from .base import env, TEMPLATES
 
 # DEBUG
 # ------------------------------------------------------------------------------
@@ -38,7 +37,6 @@ EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
 # ------------------------------------------------------------------------------
 # Keep templates in memory so tests run faster
 TEMPLATES = [{'BACKEND': 'django.template.backends.django.DjangoTemplates',
-              'APP_DIRS': True,
               'OPTIONS': {
                   'debug': False,
                   'loaders': [

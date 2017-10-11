@@ -21,4 +21,6 @@ services:
       - USE_DOCKER=yes
     ports:
       - "8000:8000"
-    entrypoint: /run_development_server.sh
+    # this will use the entrypoint script to first install the development.txt dependencies and then invoke
+    # `python manage.py runserver`
+    entrypoint: /install_dependencies_and_run_command.sh development python manage.py runserver 0.0.0.0:8000
