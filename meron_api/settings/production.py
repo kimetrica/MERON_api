@@ -1,6 +1,8 @@
 """Production settings."""
 from .base import *  # noqa
 from .base import env, MIDDLEWARE
+import requests
+
 
 SECRET_KEY = env('DJANGO_SECRET_KEY')
 
@@ -41,6 +43,15 @@ X_FRAME_OPTIONS = 'DENY'
 # See https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts
 ALLOWED_HOSTS = env.list('DJANGO_ALLOWED_HOSTS')
 # END SITE CONFIGURATION
+
+# AWS ELBs make requests with the instance's internal IP address as Host header, so we have to allow those requests
+try:
+    EC2_PRIVATE_IP = requests.get('http://169.254.169.254/latest/meta-data/local-ipv4', timeout=0.01).text
+    ALLOWED_HOSTS.append(EC2_PRIVATE_IP)
+    EC2_PRIVATE_HOSTNAME = requests.get('http://169.254.169.254/latest/meta-data/local-hostname', timeout=0.01).text
+    ALLOWED_HOSTS.append(EC2_PRIVATE_HOSTNAME)
+except requests.exceptions.RequestException:
+    pass
 
 
 LOGGING = {

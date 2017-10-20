@@ -3,3 +3,4 @@
 -r base.txt
 
 gunicorn==19.7.1
+requests==2.18.4
