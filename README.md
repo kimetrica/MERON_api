@@ -10,6 +10,7 @@ To POST an image to the API, you have two options:
 -   You can do an `application/json` request, and include the image as a base64 encoded string. The API will accept both. base64-encoding the file will add approximately 30% to the file-size, so if data volume or connection speed are of concern a `multipart/form-data` request might be preferable.
 
 The endpoint accepts two optional boolean arguments, `score` and `classification`. If instructed via those arguments, the function will calculate and include those parameters in the result. Those parameters can either be passed in the request body or provided via GET parameters in the URL.
+In addition to that, the API also supports the parameters `age` and `gender` in the request body, where `gender` is expected to be either `m` or `f`.
 
 
 ## Example POST requests to the MERON api
