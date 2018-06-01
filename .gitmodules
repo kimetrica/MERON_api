@@ -1,0 +1,3 @@
+[submodule "meron_api/apps/meron_production"]
+	path = meron_api/apps/meron_production
+	url = git@github.com:e-baumer/meron_production.git

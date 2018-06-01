@@ -4,7 +4,7 @@ We need to be able to accept an image either as multipart/form-data value or bas
 """
 import os
 from rest_framework import serializers
-from malnutrition_detection import analyze_image
+from meron_api.apps.meron_production.meron.meron_model import analyze_image
 
 from tempfile import TemporaryDirectory
 from .fields import Base64ImageField
@@ -49,9 +49,7 @@ class FaceDetectionInputSerializer(serializers.Serializer):
 class FaceDetectionOutputSerializer(serializers.Serializer):
     """Render all the values the face detection function returns."""
 
-    width = serializers.IntegerField()
-    height = serializers.IntegerField()
     score = serializers.FloatField(required=False)
-    classification = serializers.FloatField(required=False)
+    classification = serializers.CharField(required=False)
     age = serializers.IntegerField(required=False)
     gender = serializers.CharField(required=False)
