@@ -10,6 +10,13 @@ COPY . /app/
 COPY docker/django_api/install_dependencies_and_run_command.sh /install_dependencies_and_run_command.sh
 RUN chmod -v 755 /install_dependencies_and_run_command.sh
 
+RUN apt-get update && \
+    apt-get install -y cmake \
+                       build-essential && \
+    apt-get -y autoremove && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
 RUN pip install --no-cache-dir -r /app/meron_api/requirements/production.txt
 
 # creating and making user writable only necessary paths. `.virtualenv` is only necessary for development,
@@ -19,8 +26,11 @@ RUN pip install --no-cache-dir -r /app/meron_api/requirements/production.txt
 RUN mkdir /app/.virtualenv
 RUN mkdir /app/media
 RUN mkdir /app/staticfiles
+# for pip cache, in case additional packages are installed in development/testing
+# the cache is not a volume so it will persist when the container is re-used, until it's deleted
+RUN mkdir /app/.cache
 # making only the folders writable for the user that are necessary.
-RUN chown -R django /app/.virtualenv/ /app/media/ /app/staticfiles/
+RUN chown -R django /app/.virtualenv/ /app/media/ /app/staticfiles/ /app/.cache/
 
 USER django
 

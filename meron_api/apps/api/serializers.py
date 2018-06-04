@@ -22,8 +22,8 @@ class FaceDetectionInputSerializer(serializers.Serializer):
     image = Base64ImageField()
     score = serializers.BooleanField(required=False)
     classification = serializers.BooleanField(required=False)
-    age = serializers.IntegerField(required=False)
-    gender = serializers.ChoiceField(GENDER_CHOICES, required=False)
+    age = serializers.IntegerField()
+    gender = serializers.ChoiceField(GENDER_CHOICES)
 
     def create(self, validated_data):
         """Call face detection function and return results."""
@@ -41,7 +41,7 @@ class FaceDetectionInputSerializer(serializers.Serializer):
                                    'classification' in self.context['request'].query_params or
                                    validated_data.get('classification'),
                                    validated_data.get('age'),
-                                   validated_data.get('gender'),
+                                   validated_data.get('gender', ''),
                                    )
         return result
 

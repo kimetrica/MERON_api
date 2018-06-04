@@ -28,8 +28,8 @@ lint:
     SERVICE: "django_api"
   script:
     # docker-compose.ci.yml instructs docker-compose to use the image just built in this pipeline
-    # it then uses the entrypoint script to install requirements/lint.txt and then executes `flake8 meron_api/`
-    - docker-compose -f docker-compose.yml -f docker-compose.ci.yml run  --entrypoint="/install_dependencies_and_run_command.sh" --rm $SERVICE lint flake8 meron_api/
+    # it then uses the entrypoint script to install requirements/test.txt and then executes `flake8 meron_api/`
+    - docker-compose -f docker-compose.yml -f docker-compose.ci.yml run  --entrypoint="/install_dependencies_and_run_command.sh" --rm $SERVICE test flake8 meron_api/
   after_script:
     - docker-compose -f docker-compose.yml -f docker-compose.ci.yml down
   stage: lint
