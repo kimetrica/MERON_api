@@ -1,8 +1,17 @@
 # MERON API
 
-This project provides a REST API based on [django-restframework](http://www.django-rest-framework.org/) for the [malnutrition detection](https://github.com/kimetrica/malnutrition_detection) project.
-Currently the API is very simple. It provides an endpoint where images can be submitted via a POST request. It will then return a `JSON` representation of the result the malnutrition detection returned. Until the malnutrition detection functionality is completed, it will use a stub that returns fake data.
+This project provides a REST API based on [django-restframework](http://www.django-rest-framework.org/) for the [malnutrition detection](https://github.com/kimetrica/meron_production) project.
+Currently the API is very simple. It provides an endpoint where images can be submitted along with appropriate meta-data via a POST request. It will then return a `JSON` representation of the result which can include a malnutrition classification or weight-for-height (or weight-for-length) z-score. 
 
+
+## Important Note
+Our current focus of development has been on the model for predicting malnutrition classification. Although we provide a model for calculating weight-for-height (or weight-for-length) z-score this should be considered early beta and results should be used with caution. If you request both a score and a classification, you may find that the score contradicts the classification for diagnosing malnutrition. In this case, the classification should be considered more reliable.
+
+The models have been developed with a limited scope of training data. We are working towards collecting more data to improve the results of both the score and classification models.
+
+
+## How to Use the API
+Malnutrition classification and score can be obtained by POSTing an image, age (months), and gender to the API.
 
 To POST an image to the API, you have two options:
 
@@ -10,8 +19,19 @@ To POST an image to the API, you have two options:
 -   You can do an `application/json` request, and include the image as a base64 encoded string. The API will accept both. base64-encoding the file will add approximately 30% to the file-size, so if data volume or connection speed are of concern a `multipart/form-data` request might be preferable.
 
 The endpoint accepts two optional boolean arguments, `score` and `classification`. If instructed via those arguments, the function will calculate and include those parameters in the result. Those parameters can either be passed in the request body or provided via GET parameters in the URL.
-In addition to that, the API also supports the parameters `age` and `gender` in the request body, where `gender` is expected to be either `m` or `f`.
 
+In addition, the API also requires the parameters `age` and `gender` in the request body, where `gender` is expected to be either `m` or `f` and age is an integer. The age should be the age of the subject in months.
+
+### Example Data Parameters
+```
+{
+    'image' : [base64 encoded string],
+    'score' : Boolean (Default is True),
+    'classification' : Boolean (Default is True),
+    'age' : integer (age in months),
+    'gender' : string ('m' or 'f')
+}
+```
 
 ## Example POST requests to the MERON api
 
@@ -25,7 +45,7 @@ The following examples demonstrate how to make an API request to the MERON API (
 
 ### curl command for posting a base64 encoded image in a JSON object
 
-`(echo -n '{"image": "'; base64 example_image.jpeg; echo '", "score": true}') | curl -v -H 'content-type: application/json' -d @- http://meron.localdomain?classification
+`(echo -n '{"image": "'; base64 example_image.jpeg; echo '", "classification": true, "age": 30, "gender": "'f'"}') | curl -v -H 'content-type: application/json' -d @- http://meron.localdomain?classification
 `
 
 
@@ -34,7 +54,7 @@ The following examples demonstrate how to make an API request to the MERON API (
 ```python
 import requests
 
-res = requests.post('http://meron.localdomain?classification', files={'image': open('example_image.jpeg', 'rb')}, data={'score': True})
+res = requests.post('http://meron.localdomain?classification', files={'image': open('example_image.jpeg', 'rb')}, data={'classification': True, "age": 30, "gender": 'f'})
 ```
 
 
@@ -49,7 +69,7 @@ with open('example_image.jpeg', 'rb') as image_file:
     encoded_string = b64encode(image_file.read())
 
 # we need to decode the byte-string returned by b64encode so it's JSON serializable
-res = requests.post('http://meron.localdomain?classification', json={'image': encoded_string.decode(), 'score': True})
+res = requests.post('http://meron.localdomain?classification', json={'image': encoded_string.decode(), 'Classification': True, "age": 30, "gender": 'f'})
 ```
 
 
