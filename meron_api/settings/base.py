@@ -9,7 +9,6 @@ https://docs.djangoproject.com/en/dev/ref/settings/
 """
 import environ
 
-
 ROOT_DIR = environ.Path(__file__) - 2
 
 # Load operating system environment variables and then prepare to use them
@@ -135,3 +134,6 @@ MEDIA_URL = '/media/'
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#wsgi-application
 WSGI_APPLICATION = 'meron_api.wsgi.application'
+
+# Set backend for Keras
+KERAS_BACKEND = 'theano'

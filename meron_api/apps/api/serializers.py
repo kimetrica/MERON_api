@@ -20,7 +20,7 @@ class FaceDetectionInputSerializer(serializers.Serializer):
     """Serializer that uses Base64ImageField to allow POSTing of image as multipart/form-data or base64 in JSON."""
 
     image = Base64ImageField()
-    score = serializers.BooleanField(required=False, default=False)
+    score = serializers.BooleanField(required=False, default=True)
     classification = serializers.BooleanField(required=False, default=True)
     age = serializers.IntegerField()
     gender = serializers.ChoiceField(GENDER_CHOICES)

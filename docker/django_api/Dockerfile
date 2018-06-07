@@ -10,11 +10,6 @@ COPY . /app/
 COPY docker/django_api/install_dependencies_and_run_command.sh /install_dependencies_and_run_command.sh
 RUN chmod -v 755 /install_dependencies_and_run_command.sh
 
-# the pre-trained model, to prevent keras from downloading a generic one on first invocation
-ADD https://data.kimetrica.com/dataset/ce514d00-fd51-4653-8957-e2b00ab0ca13/resource/2efc79bd-96cf-42ec-9c16-b9033127b623/download/rcmalli_vggface_tf_resnet50.h5 /tmp/.keras/models/vggface/rcmalli_vggface_tf_resnet50.h5
-
-RUN chmod -v 777 /tmp/.keras/models/vggface/rcmalli_vggface_tf_resnet50.h5
-
 RUN apt-get update && \
     apt-get install -y cmake \
                        build-essential && \
