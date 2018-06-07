@@ -14,7 +14,7 @@ services:
     # assigned IPs
     networks:
       default:
-        ipv4_address: 172.1.0.3
+        ipv4_address: 172.33.0.3
 
   nginx:
     build:
@@ -33,14 +33,14 @@ services:
     networks:
       default:
         # to access this container locally you need an entry in your /etc/hosts file that resolves
-        # `172.1.0.2 meron.localdomain`
-        ipv4_address: 172.1.0.2
+        # `172.33.0.2 meron.localdomain`
+        ipv4_address: 172.33.0.2
         aliases:
           # An alias makes sure that other containers can resolve the domain name of the application to the Nginx
           # reverse proxy - change this to the external DNS name as required.
           # If you don't have a domain that is resolved by public DNS servers to the IP this container is accessible
           # from, then you will also need an entry in your local `/etc/hosts` file that resolves
-          # e.g. `172.1.0.2 meron.localdomain`
+          # e.g. `172.33.0.2 meron.localdomain`
           - meron.localdomain
 
 
@@ -50,5 +50,5 @@ networks:
     driver: bridge
     ipam:
       config:
-      - subnet: 172.1.0.0/24
-        gateway: 172.1.0.1
+      - subnet: 172.33.0.0/24
+        gateway: 172.33.0.1

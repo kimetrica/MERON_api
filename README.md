@@ -75,5 +75,5 @@ It is also possible to run the development server without Docker. Just do the fo
 3.  Install the development dependencies: `pip install -r meron_api/requirements/development.txt`
 4.  Start the development server: `python manage.py runserver[_plus]`
 
-To access the locally running copy of the API, you can use `localhost:8000` in development mode. In production mode, it is necessary to add an entry to your `hosts` file that resolves a domain to the IP Docker uses: `172.1.0.2       meron.localdomain`.
+To access the locally running copy of the API, you can use `localhost:8000` in development mode. In production mode, it is necessary to add an entry to your `hosts` file that resolves a domain to the IP Docker uses: `172.33.0.2       meron.localdomain`.
 Now you can access the API running on your local computer under: [http://meron.localdomain](http://meron.localdomain).
