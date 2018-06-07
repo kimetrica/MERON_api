@@ -13,6 +13,7 @@ variables:
   ENV: "prd"
   SECRET_KEY: "eequ8AhYakLV9fmNKbgrQi3kieShoFai0TaCjgzD"
   DOMAIN: "meron.localdomain"
+  GIT_SUBMODULE_STRATEGY: recursive
 
   # Use a unique name for the network and and containers so that we can run multiple builds simultaneously
   COMPOSE_PROJECT_NAME: ci_${APP}_${CI_PIPELINE_ID}
