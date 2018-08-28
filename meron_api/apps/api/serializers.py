@@ -10,10 +10,7 @@ from tempfile import TemporaryDirectory
 from .fields import Base64ImageField
 
 
-GENDER_CHOICES = (
-    ('f', 'Female'),
-    ('m', 'Male'),
-)
+GENDER_CHOICES = (("f", "Female"), ("m", "Male"))
 
 
 class FaceDetectionInputSerializer(serializers.Serializer):
@@ -28,21 +25,23 @@ class FaceDetectionInputSerializer(serializers.Serializer):
     def create(self, validated_data):
         """Call face detection function and return results."""
         # we need a file path that we can pass to analyze_image
-        django_content_file = validated_data['image']
+        django_content_file = validated_data["image"]
         # using a temporary directory to make sure the file is accessible to the malnutrition detection function.
         # The temporary directory will be deleted once the "with" context is completed
         with TemporaryDirectory() as tmp_dir:
             file_path = os.path.join(tmp_dir, django_content_file.name)
-            with open(file_path, 'wb') as tmp_file:
+            with open(file_path, "wb") as tmp_file:
                 tmp_file.write(django_content_file.read())
-            result = analyze_image(file_path,
-                                   # we look in data as well as GET params so users can do e.g. ?score in the URL
-                                   'score' in self.context['request'].query_params or validated_data.get('score'),
-                                   'classification' in self.context['request'].query_params or
-                                   validated_data.get('classification'),
-                                   validated_data.get('age'),
-                                   validated_data.get('gender', ''),
-                                   )
+            result = analyze_image(
+                file_path,
+                # we look in data as well as GET params so users can do e.g. ?score in the URL
+                "score" in self.context["request"].query_params
+                or validated_data.get("score"),
+                "classification" in self.context["request"].query_params
+                or validated_data.get("classification"),
+                validated_data.get("age"),
+                validated_data.get("gender", ""),
+            )
         return result
 
 

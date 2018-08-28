@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>MERON API test page</title>
+
+<style>
+form div {
+  padding: 0.4em;
+}
+</style>
+</head>
+<body>
+
+<form id="form" enctype="multipart/form-data" action=".." method="post">
+      <div>
+        <label for="image">Image file</label>
+        <input id="image" type="file" name="image" accept="image/png, image/jpeg" required />
+     </div>
+     <div>
+       <input id="score" type="checkbox" name="score" value="false" />
+       <label for="score">Do not calculate score</label>
+     </div>
+     <div>
+       <input id="classification" type="checkbox" name="classification" value="false" />
+       <label for="classification">Do not calculate classification</label>
+       </div>
+     <div>
+       <label for="age">age</label>
+       <input id="age" type="number" name="age" required min="1" max="100" />
+       </div>
+     <div>
+       Gender
+       <br />
+       <input id="female" type="radio" name="gender" value="f" required />
+       <label for="female">Female</label>
+       <br />
+       <input id="male" type="radio" name="gender" value="m" />
+       <label for="male">Male</label>
+       <br />
+     </div>
+     <div id="submit">
+       <input type="submit" value="Submit" />
+     </div>
+</form>
+
+</body>
+</html>

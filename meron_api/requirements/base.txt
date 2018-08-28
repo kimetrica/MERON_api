@@ -5,7 +5,7 @@ django-environ==0.4.4
 whitenoise==3.3.1
 Pillow==5.1.0
 
-opencv-python==3.4.0.14
+opencv-python==3.4.2.17
 dlib==19.10.0
 numpy==1.14.2
 tensorflow==1.6.0
