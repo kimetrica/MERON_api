@@ -27,15 +27,15 @@ In addition, the API also requires the parameters `age` and `gender` in the requ
 The API ships with a very simple page that allows you to upload a file using a [HTML form](/try/)
 
 ### Example Data Parameters
-```
-{
-    'image' : [base64 encoded string],
-    'score' : Boolean (Default is True),
-    'classification' : Boolean (Default is True),
-    'age' : integer (age in months),
-    'gender' : string ('m' or 'f')
-}
-```
+
+    {
+        'image' : [base64 encoded string],
+        'score' : Boolean (Default is True),
+        'classification' : Boolean (Default is True),
+        'age' : integer (age in months),
+        'gender' : string ('m' or 'f')
+    }
+
 
 ## Example POST requests to the MERON api
 
@@ -55,26 +55,22 @@ The following examples demonstrate how to make an API request to the MERON API (
 
 ### Python example using the requests library (multipart/form-data)
 
-```
-import requests
+    import requests
 
-res = requests.post('http://meron.localdomain?classification', files={'image': open('example_image.jpeg', 'rb')}, data={'classification': True, "age": 30, "gender": 'f'})
-```
+    res = requests.post('http://meron.localdomain?classification', files={'image': open('example_image.jpeg', 'rb')}, data={'classification': True, "age": 30, "gender": 'f'})
 
 
 ### Python example using the requests library (base64 encoded image)
 
-```
-from base64 import b64encode
-import requests
+    from base64 import b64encode
+    import requests
 
 
-with open('example_image.jpeg', 'rb') as image_file:
-    encoded_string = b64encode(image_file.read())
+    with open('example_image.jpeg', 'rb') as image_file:
+        encoded_string = b64encode(image_file.read())
 
-# we need to decode the byte-string returned by b64encode so it's JSON serializable
-res = requests.post('http://meron.localdomain?classification', json={'image': encoded_string.decode(), 'Classification': True, "age": 30, "gender": 'f'})
-```
+    # we need to decode the byte-string returned by b64encode so it's JSON serializable
+    res = requests.post('http://meron.localdomain?classification', json={'image': encoded_string.decode(), 'Classification': True, "age": 30, "gender": 'f'})
 
 
 ## Running the project
