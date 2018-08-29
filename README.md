@@ -1,7 +1,7 @@
 # MERON API
 
 This project provides a REST API based on [django-restframework](http://www.django-rest-framework.org/) for the [malnutrition detection](https://github.com/kimetrica/meron_production) project.
-Currently the API is very simple. It provides an endpoint where images can be submitted along with appropriate meta-data via a POST request. It will then return a `JSON` representation of the result which can include a malnutrition classification or weight-for-height (or weight-for-length) z-score. 
+Currently the API is very simple. It provides an endpoint where images can be submitted along with appropriate meta-data via a POST request. It will then return a `JSON` representation of the result which can include a malnutrition classification or weight-for-height (or weight-for-length) z-score.
 
 
 ## Important Note
@@ -21,6 +21,10 @@ To POST an image to the API, you have two options:
 The endpoint accepts two optional boolean arguments, `score` and `classification`. If instructed via those arguments, the function will calculate and include those parameters in the result. Those parameters can either be passed in the request body or provided via GET parameters in the URL.
 
 In addition, the API also requires the parameters `age` and `gender` in the request body, where `gender` is expected to be either `m` or `f` and age is an integer. The age should be the age of the subject in months.
+
+## Trying the API
+
+The API ships with a very simple page that allows you to upload a file using a [HTML form](/try/)
 
 ### Example Data Parameters
 ```
@@ -51,7 +55,7 @@ The following examples demonstrate how to make an API request to the MERON API (
 
 ### Python example using the requests library (multipart/form-data)
 
-```python
+```
 import requests
 
 res = requests.post('http://meron.localdomain?classification', files={'image': open('example_image.jpeg', 'rb')}, data={'classification': True, "age": 30, "gender": 'f'})
@@ -60,7 +64,7 @@ res = requests.post('http://meron.localdomain?classification', files={'image': o
 
 ### Python example using the requests library (base64 encoded image)
 
-```python
+```
 from base64 import b64encode
 import requests
 
