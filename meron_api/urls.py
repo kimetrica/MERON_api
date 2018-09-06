@@ -5,7 +5,7 @@ from django.conf.urls import include, url
 
 urlpatterns = [
     url(r"", include("meron_api.apps.api.urls", namespace="api")),
-    url(r"try/", include("meron_api.apps.try.urls", namespace="try")),
+    url(r"frontend/", include("meron_api.apps.frontend.urls", namespace="frontend")),
 ]
 
 

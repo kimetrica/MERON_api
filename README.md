@@ -24,7 +24,7 @@ In addition, the API also requires the parameters `age` and `gender` in the requ
 
 ## Trying the API
 
-The API ships with a very simple page that allows you to upload a file using a [HTML form](/try/)
+The API ships with a very simple page that allows you to upload a file using a [HTML form](/frontend/)
 
 ### Example Data Parameters
 
@@ -70,7 +70,7 @@ The following examples demonstrate how to make an API request to the MERON API (
         encoded_string = b64encode(image_file.read())
 
     # we need to decode the byte-string returned by b64encode so it's JSON serializable
-    res = requests.post('http://meron.localdomain?classification', json={'image': encoded_string.decode(), 'Classification': True, "age": 30, "gender": 'f'})
+    res = requests.post('http://meron.localdomain?classification', json={'image': encoded_string.decode(), 'classification': True, "age": 30, "gender": 'f'})
 
 
 ## Running the project

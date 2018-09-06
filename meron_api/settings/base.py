@@ -36,7 +36,10 @@ DJANGO_APPS = [
 THIRD_PARTY_APPS = ["rest_framework"]
 
 # Apps specific for this project go here.
-LOCAL_APPS = ["meron_api.apps.api.apps.ApiConfig", "meron_api.apps.try.apps.TryConfig"]
+LOCAL_APPS = [
+    "meron_api.apps.api.apps.ApiConfig",
+    "meron_api.apps.frontend.apps.FrontendConfig",
+]
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS

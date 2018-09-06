@@ -4,6 +4,8 @@ from django.views.generic.base import TemplateView
 from django.urls import path
 
 
-app_name = "try"
+app_name = "frontend"
 
-urlpatterns = [path("", TemplateView.as_view(template_name="try.html"), name="try")]
+urlpatterns = [
+    path("", TemplateView.as_view(template_name="frontend.html"), name="frontend")
+]
