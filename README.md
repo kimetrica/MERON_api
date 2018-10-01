@@ -5,7 +5,7 @@ This project provides a REST API based on [django-restframework](http://www.djan
 
 ## Source code
 
-The source code repository for this API can be found here: [https://github.com/kimetrica/meron](https://github.com/kimetrica/meron)
+The source code repository for this API can be found here: [https://github.com/kimetrica/MERON_api](https://github.com/kimetrica/MERON_api)
 
 
 ## Live version of the API
