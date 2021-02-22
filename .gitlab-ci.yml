@@ -1,12 +1,15 @@
-before_script:
-  # removing stale networks in case they have not been cleaned up due to tasks that failed before cleanup step
-  - docker network rm $(docker network ls | grep cimrn | awk {'print $1'}) || echo "no stale networks"
-
 stages:
   - build
   - lint
   - test
   - cleanup
+
+# Use a base image that contains Docker-Compose as well as Docker
+image: tmaier/docker-compose:19.03
+
+# Make sure that the container is allowed access to use Docker to build and run new images
+services:
+  - docker:dind
 
 variables:
   APP: "mrn"
@@ -14,6 +17,12 @@ variables:
   SECRET_KEY: "eequ8AhYakLV9fmNKbgrQi3kieShoFai0TaCjgzD"
   DOMAIN: "meron.localdomain"
   GIT_SUBMODULE_STRATEGY: recursive
+  
+  # Create the certificates inside this directory for both the server
+  # and client. The certificates used by the client will be created in
+  # /certs/client so we only need to share this directory with the
+  # volume mount in `config.toml`.
+  DOCKER_TLS_CERTDIR: '/certs/client'
 
   # Use a unique name for the network and and containers so that we can run multiple builds simultaneously
   COMPOSE_PROJECT_NAME: ci_${APP}_${CI_PIPELINE_ID}
