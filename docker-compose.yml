@@ -1,4 +1,4 @@
-version: '2'
+version: "2"
 
 services:
   django_api:
@@ -8,8 +8,9 @@ services:
     environment:
       - DJANGO_SETTINGS_MODULE=meron_api.settings.insecure
       - DJANGO_SECRET_KEY=voruuth2eexeZ6haiNgajae9ohme3aixb6\xe8\x0c\x90\x1f
+      - DJANGO_DEBUG=False
       - DJANGO_ALLOWED_HOSTS=meron.localdomain
-      - GUNICORN_REQUEST_TIMEOUT=300
+      - UID=${UID:-1000}
     # setting an IP address for this container is not strictly necessary, but it prevents clashes with automatically
     # assigned IPs
     networks:
@@ -43,12 +44,11 @@ services:
           # e.g. `172.33.0.2 meron.localdomain`
           - meron.localdomain
 
-
 networks:
   # Use a custom network so we can use static IPs for the containers and map a hostname to those IPs
   default:
     driver: bridge
     ipam:
       config:
-      - subnet: 172.33.0.0/24
-        gateway: 172.33.0.1
+        - subnet: 172.33.0.0/24
+          gateway: 172.33.0.1
