@@ -9,11 +9,10 @@ services:
       - ${PWD}/docker:/app/docker:ro
     environment:
       - DJANGO_SETTINGS_MODULE=meron_api.settings.development
-      - DJANGO_ALLOWED_HOSTS=meron.localdomain,localhost,127.0.0.1
       # this instructs settings to add the Docker IP to INTERNAL_IPS, for django-debug-toolbar
       - USE_DOCKER=yes
       - DJANGO_DEBUG=True
     ports:
       - "5000:5000"
-    # in development, this will run the Django dev server
+    # in development, we will run the Django dev server instead of gunicorn
     command: python manage.py runserver 0.0.0.0:5000
