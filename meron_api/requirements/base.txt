@@ -8,7 +8,7 @@ Pillow==5.1.0
 opencv-python==3.4.2.17
 dlib==19.10.0
 numpy==1.14.2
-tensorflow==1.6.0
+tensorflow==2.4.0
 keras_vggface==0.5
 keras==2.1.5
 scikit-learn==0.19.1
