@@ -1,4 +1,4 @@
 # Test dependencies go here.
 -r development.txt
 
-flake8==3.5.0
+flake8==3.9.0
