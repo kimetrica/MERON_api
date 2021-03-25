@@ -1,26 +1,18 @@
-version: '2'
+version: "2"
 
 services:
   django_api:
     volumes:
-      # project directory is mounted (but read-only), so changes to the source code are picked up by development server
+      # project directory is mounted (but read-only), so changes to the source code
+      # are picked up by development server
       - ${PWD}/meron_api:/app/meron_api:ro
-      # if you want to avoid having to download the development requirements every time a new container is being
-      # started (which will only happen when it was rebuilt or removed), you can mount the virtualenv to your Docker
-      # host filesystem. Please note that this folder has to be created beforehand, and it has to have write
-      # permissions for "others". Otherwise the folder will be created by root and will not be writable to the
-      # unprivileged user that is running processes inside the container. It is also possible to instruct
-      # docker-compose to start the containers with your user's UID which would create the folder with your user rights
-      # and let the process inside the container write to it, but simply making the virtualenv folder world-writable is
-      # easier
-      # - ${PWD}/.virtualenv:/app/.virtualenv:rw
+      - ${PWD}/docker:/app/docker:ro
     environment:
       - DJANGO_SETTINGS_MODULE=meron_api.settings.development
-      - DJANGO_ALLOWED_HOSTS=meron.localdomain,localhost,127.0.0.1
       # this instructs settings to add the Docker IP to INTERNAL_IPS, for django-debug-toolbar
       - USE_DOCKER=yes
+      - DJANGO_DEBUG=True
     ports:
-      - "8000:8000"
-    # this will use the entrypoint script to first install the development.txt dependencies and then invoke
-    # `python manage.py runserver`
-    entrypoint: /install_dependencies_and_run_command.sh development python manage.py runserver 0.0.0.0:8000
+      - "5000:5000"
+    # in development, we will run the Django dev server instead of gunicorn
+    command: python manage.py runserver 0.0.0.0:5000

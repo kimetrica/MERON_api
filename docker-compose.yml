@@ -1,4 +1,4 @@
-version: '2'
+version: "2"
 
 services:
   django_api:
@@ -6,15 +6,13 @@ services:
       context: .
       dockerfile: ./docker/django_api/Dockerfile
     environment:
+      # us production-like settings without SSL locally
+      # override file uses development settings
       - DJANGO_SETTINGS_MODULE=meron_api.settings.insecure
       - DJANGO_SECRET_KEY=voruuth2eexeZ6haiNgajae9ohme3aixb6\xe8\x0c\x90\x1f
-      - DJANGO_ALLOWED_HOSTS=meron.localdomain
-      - GUNICORN_REQUEST_TIMEOUT=300
-    # setting an IP address for this container is not strictly necessary, but it prevents clashes with automatically
-    # assigned IPs
-    networks:
-      default:
-        ipv4_address: 172.33.0.3
+      - DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1
+      - UID=${UID:-1000}
+      - DJANGO_DEBUG=False
 
   nginx:
     build:
@@ -22,7 +20,7 @@ services:
     depends_on:
       - django_api
     environment:
-      - DOMAIN=meron.localdomain
+      - DOMAIN=localhost
       - NGINX_WORKER_PROCESSES=1
       # For fluentd logging use the following line instead:
       #- NGINX_ACCESS_LOGFORMAT=fluentd_json
@@ -30,25 +28,3 @@ services:
       - NGINX_PROXY_READ_TIMEOUT=300
     ports:
       - 80:80
-    networks:
-      default:
-        # to access this container locally you need an entry in your /etc/hosts file that resolves
-        # `172.33.0.2 meron.localdomain`
-        ipv4_address: 172.33.0.2
-        aliases:
-          # An alias makes sure that other containers can resolve the domain name of the application to the Nginx
-          # reverse proxy - change this to the external DNS name as required.
-          # If you don't have a domain that is resolved by public DNS servers to the IP this container is accessible
-          # from, then you will also need an entry in your local `/etc/hosts` file that resolves
-          # e.g. `172.33.0.2 meron.localdomain`
-          - meron.localdomain
-
-
-networks:
-  # Use a custom network so we can use static IPs for the containers and map a hostname to those IPs
-  default:
-    driver: bridge
-    ipam:
-      config:
-      - subnet: 172.33.0.0/24
-        gateway: 172.33.0.1

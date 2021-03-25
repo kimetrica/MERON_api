@@ -1,4 +1,4 @@
 # Test dependencies go here.
--r base.txt
+-r development.txt
 
 flake8==3.5.0
